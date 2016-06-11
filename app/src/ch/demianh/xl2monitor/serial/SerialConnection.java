@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SerialConnection implements ISerialConnection {
     private static String DEVICE_NAME = "NTiAudio,XL2";
-    private static String PORT_PREFIX = "tty.";
+    private static String PORT_PREFIX = "tty.usb";
 
     private SerialPort serialPort = null;
     private OutputStream outputStream = null;
