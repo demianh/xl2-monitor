@@ -1,5 +1,10 @@
 package ch.demianh.xl2monitor;
 
+import ch.demianh.xl2monitor.serial.SerialConnection;
+import ch.demianh.xl2monitor.serial.SerialConnectionException;
+import ch.demianh.xl2monitor.serial.SerialScreenReader;
+import ch.demianh.xl2monitor.websync.Websync;
+
 class MonitorThread implements Runnable {
 
     private boolean TESTING_MODE = false;
@@ -42,12 +47,11 @@ class MonitorThread implements Runnable {
                     }
 
                     app.setValue(decibel);
+                    app.setErrorMessage("");
+
                     System.out.println("dB: " + decibel);
 
-                    // TODO: implement async requests
-                    //websync.sendValue(app.getName(), Double.toString(decibel));
-
-                    app.setErrorMessage("");
+                    websync.sendValue(app.getName(), Double.toString(decibel));
 
                 } catch (SerialConnectionException e){
                     app.setErrorMessage(e.getMessage());

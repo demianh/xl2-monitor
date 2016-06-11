@@ -1,4 +1,4 @@
-package ch.demianh.xl2monitor;
+package ch.demianh.xl2monitor.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
 
@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SerialConnection implements ISerialConnection{
+public class SerialConnection implements ISerialConnection {
     private static String DEVICE_NAME = "NTiAudio,XL2";
     private static String PORT_PREFIX = "tty.";
 
@@ -49,7 +49,7 @@ public class SerialConnection implements ISerialConnection{
         return (this.serialPort != null);
     }
 
-    public String queryString(String query) throws SerialConnectionException{
+    public String queryString(String query) throws SerialConnectionException {
         byte[] result = this.queryBytes(query);
         if(result == null){
             throw new SerialConnectionException("No data from device");

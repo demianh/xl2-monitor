@@ -1,4 +1,4 @@
-package ch.demianh.xl2monitor;
+package ch.demianh.xl2monitor.serial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,31 +20,31 @@ public class SerialScreenReader {
     /**
      * there is an offset before/after the screen pixels
      */
-    public static int OFFSET_BYTES_START = 117;
-    public static int OFFSET_BYTES_END = 7;
+    private static int OFFSET_BYTES_START = 117;
+    private static int OFFSET_BYTES_END = 7;
 
     /**
      * Which lines should be taken to recognize the numbers
      */
-    public static int LINE_NUMBER_1 = 99;
-    public static int LINE_NUMBER_2 = 100;
+    private static int LINE_NUMBER_1 = 99;
+    private static int LINE_NUMBER_2 = 100;
 
     /**
      * Indicates the rows where the numbers display start (LAeq60)
      */
-    public static int OFFSET_DIGIT_1 = 76;
-    public static int OFFSET_DIGIT_2 = 89;
-    public static int OFFSET_DIGIT_3 = 102;
-    public static int OFFSET_DIGIT_4 = 120;
+    private static int OFFSET_DIGIT_1 = 76;
+    private static int OFFSET_DIGIT_2 = 89;
+    private static int OFFSET_DIGIT_3 = 102;
+    private static int OFFSET_DIGIT_4 = 120;
 
-    public static int DIGIT_WIDTH = 11;
+    private static int DIGIT_WIDTH = 11;
 
     /**
      * Pattern of the cut-out of two lines for each number (0-9).
      * Patterns are a combination of line 100 + 101 of the screen
      * which make an unique identifier for each number
      */
-    public static String[] NUMBER_PATTERN = {
+    private static String[] NUMBER_PATTERN = {
             "###     ######     ###",
             "    ###        ###    ",
             "      ####      ####  ",
@@ -63,9 +63,13 @@ public class SerialScreenReader {
 
     public double parseLAeq60Value(){
 
+
         String LAeq60value = "";
 
         List<String> lines = this.getScreenLines();
+        if(lines == null){
+            return 0.0;
+        }
         if(lines.size() > LINE_NUMBER_2){
             String line1 = lines.get(LINE_NUMBER_1);
             String line2 = lines.get(LINE_NUMBER_2);
@@ -93,7 +97,11 @@ public class SerialScreenReader {
 
     public void printScreenToLog(){
         int linecount = 0;
-        for (String line : this.getScreenLines()) {
+        List<String> lines = this.getScreenLines();
+        if(lines == null){
+            return;
+        }
+        for (String line : lines) {
             System.out.println(String.format("%3d", linecount) + ": " + line);
             linecount++;
         }
@@ -108,6 +116,9 @@ public class SerialScreenReader {
     }
 
     private List<String> getScreenLines(){
+        if(data == null){
+            return null;
+        }
         String tmpLine = "";
         List<String> lines = new ArrayList<String>();
 

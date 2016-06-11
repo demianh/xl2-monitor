@@ -1,6 +1,9 @@
 package ch.demianh.xl2monitor;
 
 
+import ch.demianh.xl2monitor.serial.SerialConnection;
+import ch.demianh.xl2monitor.serial.SerialScreenReader;
+
 public class StandaloneTest {
 
     public static void main(String[] args) throws Exception {

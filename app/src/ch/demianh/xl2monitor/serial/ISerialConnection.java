@@ -1,6 +1,6 @@
-package ch.demianh.xl2monitor;
+package ch.demianh.xl2monitor.serial;
 
-interface ISerialConnection {
+public interface ISerialConnection {
 
     void disconnect();
 
