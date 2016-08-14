@@ -6,9 +6,7 @@ new Vue({
     methods: {
         updateData: function () {
             this.$http.get('api.php/stations').then(function (response, status, request) {
-                var data = JSON.parse(response.body);
-                console.log(data);
-                this.stations = data;
+                this.stations = JSON.parse(response.body);
             }).finally(function () {
                 setTimeout(this.updateData, 1000);
             });
