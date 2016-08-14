@@ -10,7 +10,7 @@ new Vue({
                 console.log(data);
                 this.stations = data;
             }).finally(function () {
-                //setTimeout(this.updateData, 1000);
+                setTimeout(this.updateData, 1000);
             });
         }
     },
