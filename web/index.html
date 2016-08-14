@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Monitor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="css/bootstrap-superhero-3.3.7.min.css">
+  <script src="js/vue-1.0.26.js"></script>
+  <script src="js/vue-resource-0.9.3.min.js"></script>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="col-md-12">
+      <h1>Aktuelle Messdaten</h1>
+    </div>
+    <div v-for="station in stations" class="col-md-4">
+      <div class="station">
+        <h3>{{station.station}}</h3>
+        <h2 :class="{ 'text-danger': station.value >= 100}">{{station.value}} dB</h2>
+        <div>{{station.timestamp | prettydate}}</div>
+      </div>
+    </div>
+    <div v-if="stations.length < 1">
+      Keine Daten...
+    </div>
+  </div>
+
+  <script src="js/app.js?v=1.0"></script>
+</body>
+</html>

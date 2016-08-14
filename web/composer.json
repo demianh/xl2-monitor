@@ -1,0 +1,6 @@
+{
+    "require": {
+        "slim/slim": "^3.5",
+        "doctrine/dbal": "^2.5"
+    }
+}
