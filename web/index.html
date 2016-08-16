@@ -17,7 +17,7 @@
     <div v-for="station in stations" class="col-md-4">
       <div class="station">
         <h3>{{station.station}}</h3>
-        <h2 :class="{ 'text-danger': station.value >= 100}">{{station.value}} dB</h2>
+        <h2 :class="{ 'text-danger': station.value >= 100}">{{parseFloat(station.value).toFixed(1)}} dB</h2>
         <div>{{station.timestamp | prettydate}}</div>
       </div>
     </div>
