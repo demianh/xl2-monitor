@@ -33,7 +33,7 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
  */
 $app->post('/', function ($request, $response, $args) use(&$DB) {
 	$json = file_get_contents("php://input");
-	$data = json_decode($json, true);
+	$data = json_decode(urldecode($json), true);
 
 	if($data && isset($data['station']) && isset($data['value'])){
 		$row = [
