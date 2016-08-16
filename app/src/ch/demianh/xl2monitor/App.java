@@ -11,6 +11,9 @@ import java.util.prefs.Preferences;
 
 public class App extends Frame implements ActionListener, WindowListener {
 
+    private boolean TESTING_MODE = false;
+    private String SYNC_URL = "http://mfw.usystems.ch/api.php";
+
     private Label dbValueLabel;
     private Label errorLabel;
     private Button stopBtn;
@@ -28,13 +31,32 @@ public class App extends Frame implements ActionListener, WindowListener {
     private MonitorThread runnable = null;
 
     public static void main(String[] args){
-        App app = new App();
+        App app = new App(args);
         app.setSize(300,300);
         app.setVisible(true);
         app.setResizable(false);
     }
 
-    private App() {
+    private App(String[] args) {
+
+        int paramNo = 0;
+        for (String arg: args) {
+            // first cli param is testing mode (true|{anything})
+            if(paramNo == 0){
+                if(arg.equals("true")){
+                    System.out.println("Starting in Testing Mode");
+                    this.TESTING_MODE = true;
+                }
+            }
+            // second cli param is custom sync url (http url)
+            if(paramNo == 1){
+                if(arg.startsWith("http")){
+                    System.out.println("Using custom Sync URL: " + arg);
+                    this.SYNC_URL = arg;
+                }
+            }
+            paramNo++;
+        }
 
         this.setTitle("XL2 Monitor");
         this.setLayout(null);
@@ -143,7 +165,7 @@ public class App extends Frame implements ActionListener, WindowListener {
             stopMonitoring();
         }
 
-        runnable = new MonitorThread(this);
+        runnable = new MonitorThread(this, TESTING_MODE, this.SYNC_URL);
         thread = new Thread(runnable);
         thread.start();
         setStateStarted();

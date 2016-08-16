@@ -7,18 +7,20 @@ import ch.demianh.xl2monitor.websync.Websync;
 
 class MonitorThread implements Runnable {
 
-    private boolean TESTING_MODE = false;
-
     private App app;
+    private boolean TESTING_MODE = false;
+    private String SYNC_URL;
 
-    public MonitorThread(App app){
+    public MonitorThread(App app, Boolean testing, String syncUrl){
         this.app = app;
+        this.TESTING_MODE = testing;
+        this.SYNC_URL = syncUrl;
     }
 
     public void run() {
         System.out.println("Thread started..." + app.getName());
 
-        Websync websync = new Websync();
+        Websync websync = new Websync(this.SYNC_URL);
 
         SerialConnection connection = new SerialConnection();
 

@@ -4,7 +4,11 @@ import java.net.URLEncoder;
 
 public class Websync {
 
-    private final String SYNC_URL = "http://holderegger.org/post.php";
+    private String SYNC_URL;
+
+    public Websync(String syncUrl){
+        this.SYNC_URL = syncUrl;
+    }
 
     public void sendValue(String stationName, String value) throws Exception {
         stationName = URLEncoder.encode(stationName, "utf8");
