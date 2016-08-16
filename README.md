@@ -5,11 +5,13 @@ The device needs to be connected to the computer through an usb cable.
 
 ![screenshot](https://raw.githubusercontent.com/demianh/xl2-monitor/master/docs/screenshot.png)
 
+
 ## Download
 
 [Download ZIP](https://raw.githubusercontent.com/demianh/xl2-monitor/master/xl2monitor.zip)
 
 Currently only OSX builds are available, though Windows should be possible. Requires X11 XQuartz to run.
+
 
 ## How it works
 
@@ -19,3 +21,15 @@ This screenshot shows which pixels are used to parse the number:
 
 Result: double value 52.7
 
+
+## Advanced / Debugging
+
+You can run the binary directly from the commandline: `XL2Monitor.app/Contents/MacOS/monitor`
+
+It allows to set two cli parameters: `monitor [debugging] [sync url]`
+
+Example:
+
+```
+./monitor true http://localhost/api.php
+```
