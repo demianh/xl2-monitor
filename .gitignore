@@ -1,3 +1,5 @@
 /web/.idea
 /web/_conf.php
 /web/vendor
+/web/composer.phar
+/web/.htaccess
