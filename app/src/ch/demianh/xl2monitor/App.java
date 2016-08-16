@@ -20,6 +20,7 @@ public class App extends Frame implements ActionListener, WindowListener {
     private Button startBtn;
     private Button saveBtn;
     private TextField nameInput;
+    private Preferences prefs;
 
     private Color headerBg = new Color((int)Long.parseLong("BCDBF5", 16));
     private Color inputBg = new Color((int)Long.parseLong("EDF4FA", 16));
@@ -94,7 +95,7 @@ public class App extends Frame implements ActionListener, WindowListener {
         nameLabel.setFont(defaultFont);
         this.add(nameLabel);
 
-        nameInput = new TextField(this.loadName(), 20);
+        nameInput = new TextField(this.getName(), 20);
         nameInput.setBounds(70,30,120,30);
         nameInput.setVisible(true);
         nameInput.setBackground(inputBg);
@@ -182,17 +183,17 @@ public class App extends Frame implements ActionListener, WindowListener {
     }
 
     private void saveName(){
-        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
-        prefs.put("NAME", nameInput.getText());
-    }
-
-    private String loadName(){
-        Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
-        return prefs.get("NAME", "Name");
+        if(this.prefs == null){
+            this.prefs = Preferences.userRoot().node(this.getClass().getName());
+        }
+        this.prefs.put("NAME", nameInput.getText());
     }
 
     public String getName(){
-        return nameInput.getText();
+        if(this.prefs == null){
+            this.prefs = Preferences.userRoot().node(this.getClass().getName());
+        }
+        return this.prefs.get("NAME", "Name");
     }
 
     public void setErrorMessage(String message){
