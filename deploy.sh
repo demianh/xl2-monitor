@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Config
-PROJECT_DIR=/home/cybersco/www/mfw
+PROJECT_DIR=/home/cybersco/www/mfw_usystems_ch
 CONFIG_FILE=/home/cybersco/_config.mfw.php
 HTACCESS_FILE=/home/cybersco/.htaccess_mfw
 
