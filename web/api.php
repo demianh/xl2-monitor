@@ -21,7 +21,7 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 			GROUP BY station
 		) r ON t.station = r.station AND t.timestamp = r.maxts
 		WHERE t.timestamp > UNIX_TIMESTAMP() - 60 * 60 * 12
-		ORDER BY t.timestamp desc
+		ORDER BY t.station ASC
 	');
 
 	return $response->withJson($stations);
