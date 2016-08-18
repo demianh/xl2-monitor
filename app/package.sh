@@ -9,6 +9,6 @@ echo '####                                                                ####'
 echo '########################################################################'
 echo ''
 
-java -jar packr.jar packr-config.json
+java -jar packr.jar packr-config-mac.json
 
 zip -r -X ../xl2monitor.zip XL2Monitor.app

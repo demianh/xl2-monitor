@@ -1,5 +1,7 @@
 package ch.demianh.xl2monitor.serial;
 
+import ch.demianh.xl2monitor.serial.patterns.IScreenPattern;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,48 +19,12 @@ public class SerialScreenReader {
 
     private byte[] data = null;
 
-    /**
-     * there is an offset before/after the screen pixels
-     */
-    private static int OFFSET_BYTES_START = 117;
-    private static int OFFSET_BYTES_END = 7;
-
-    /**
-     * Which lines should be taken to recognize the numbers
-     */
-    private static int LINE_NUMBER_1 = 99;
-    private static int LINE_NUMBER_2 = 100;
-
-    /**
-     * Indicates the rows where the numbers display start (LAeq60)
-     */
-    private static int OFFSET_DIGIT_1 = 76;
-    private static int OFFSET_DIGIT_2 = 89;
-    private static int OFFSET_DIGIT_3 = 102;
-    private static int OFFSET_DIGIT_4 = 120;
-
-    private static int DIGIT_WIDTH = 11;
-
-    /**
-     * Pattern of the cut-out of two lines for each number (0-9).
-     * Patterns are a combination of line 100 + 101 of the screen
-     * which make an unique identifier for each number
-     */
-    private static String[] NUMBER_PATTERN = {
-            "###     ######     ###",
-            "    ###        ###    ",
-            "      ####      ####  ",
-            "    #####      ###### ",
-            " ###  ###   ###  ###  ",
-            "##############     ###",
-            "########## ###########",
-            "     ###        ###   ",
-            "  #######   ######### ",
-            "########### ##########"};
+    private IScreenPattern P;
 
 
-    public SerialScreenReader(byte[] data){
+    public SerialScreenReader(byte[] data, IScreenPattern pattern){
         this.data = data;
+        this.P = pattern;
     }
 
     public double parseLAeq60Value(){
@@ -70,22 +36,22 @@ public class SerialScreenReader {
         if(lines == null){
             return 0.0;
         }
-        if(lines.size() > LINE_NUMBER_2){
-            String line1 = lines.get(LINE_NUMBER_1);
-            String line2 = lines.get(LINE_NUMBER_2);
+        if(lines.size() > P.LINE_NUMBER_2()){
+            String line1 = lines.get(P.LINE_NUMBER_1());
+            String line2 = lines.get(P.LINE_NUMBER_2());
 
-            String number1 = line1.substring(OFFSET_DIGIT_1, OFFSET_DIGIT_1+DIGIT_WIDTH) + line2.substring(OFFSET_DIGIT_1, OFFSET_DIGIT_1+DIGIT_WIDTH);
+            String number1 = line1.substring(P.OFFSET_DIGIT_1(), P.OFFSET_DIGIT_1()+P.DIGIT_WIDTH()) + line2.substring(P.OFFSET_DIGIT_1(), P.OFFSET_DIGIT_1()+P.DIGIT_WIDTH());
             LAeq60value += guessNumber(number1);
 
-            String number2 = line1.substring(OFFSET_DIGIT_2, OFFSET_DIGIT_2+DIGIT_WIDTH) + line2.substring(OFFSET_DIGIT_2, OFFSET_DIGIT_2+DIGIT_WIDTH);
+            String number2 = line1.substring(P.OFFSET_DIGIT_2(), P.OFFSET_DIGIT_2()+P.DIGIT_WIDTH()) + line2.substring(P.OFFSET_DIGIT_2(), P.OFFSET_DIGIT_2()+P.DIGIT_WIDTH());
             LAeq60value += guessNumber(number2);
 
-            String number3 = line1.substring(OFFSET_DIGIT_3, OFFSET_DIGIT_3+DIGIT_WIDTH) + line2.substring(OFFSET_DIGIT_3, OFFSET_DIGIT_3+DIGIT_WIDTH);
+            String number3 = line1.substring(P.OFFSET_DIGIT_3(), P.OFFSET_DIGIT_3()+P.DIGIT_WIDTH()) + line2.substring(P.OFFSET_DIGIT_3(), P.OFFSET_DIGIT_3()+P.DIGIT_WIDTH());
             LAeq60value += guessNumber(number3);
 
             LAeq60value += ".";
 
-            String number4 = line1.substring(OFFSET_DIGIT_4, OFFSET_DIGIT_4+DIGIT_WIDTH) + line2.substring(OFFSET_DIGIT_4, OFFSET_DIGIT_4+DIGIT_WIDTH);
+            String number4 = line1.substring(P.OFFSET_DIGIT_4(), P.OFFSET_DIGIT_4()+P.DIGIT_WIDTH()) + line2.substring(P.OFFSET_DIGIT_4(), P.OFFSET_DIGIT_4()+P.DIGIT_WIDTH());
             LAeq60value += guessNumber(number4);
 
             return Double.parseDouble(LAeq60value);
@@ -109,7 +75,7 @@ public class SerialScreenReader {
 
     private int guessNumber(String pixels){
         for(int i = 0; i < 10; i++){
-            if(NUMBER_PATTERN[i].equals(pixels))
+            if(P.NUMBER_PATTERN()[i].equals(pixels))
                 return i;
         }
         return 0;
@@ -123,14 +89,14 @@ public class SerialScreenReader {
         List<String> lines = new ArrayList<String>();
 
         // only read the screen bytes, skip chunks
-        for(int i = OFFSET_BYTES_START; i < data.length - OFFSET_BYTES_END; i++){
+        for(int i = P.OFFSET_BYTES_START(); i < data.length - P.OFFSET_BYTES_END(); i++){
 
             // convert byte into two 4 bit parts (each represents a pixel)
             byte pixel1 = (byte) (data[i] & 0xF);
             byte pixel2 = (byte) ((data[i] >> 4) & 0xF);
             tmpLine += bitToPixel(pixel2) + bitToPixel(pixel1);
 
-            if((i + OFFSET_BYTES_START) % 80 == 0){
+            if((i + P.OFFSET_BYTES_START()) % 80 == 0){
                 // screen lines are sent from bottom to top
                 // add screen line to the beginning of lines array for easier processing later
                 lines.add(0, tmpLine);

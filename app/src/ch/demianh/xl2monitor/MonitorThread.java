@@ -3,6 +3,7 @@ package ch.demianh.xl2monitor;
 import ch.demianh.xl2monitor.serial.SerialConnection;
 import ch.demianh.xl2monitor.serial.SerialConnectionException;
 import ch.demianh.xl2monitor.serial.SerialScreenReader;
+import ch.demianh.xl2monitor.serial.patterns.*;
 import ch.demianh.xl2monitor.websync.Websync;
 
 class MonitorThread implements Runnable {
@@ -44,7 +45,7 @@ class MonitorThread implements Runnable {
                     } else {
                         // Read from serial port
                         byte[] data = connection.queryBytes("RXL2S");
-                        SerialScreenReader serialScreenReader = new SerialScreenReader(data);
+                        SerialScreenReader serialScreenReader = new SerialScreenReader(data, new LAEQ60_Wide_Pattern());
                         decibel = serialScreenReader.parseLAeq60Value();
                     }
 

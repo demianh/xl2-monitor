@@ -3,6 +3,7 @@ package ch.demianh.xl2monitor;
 
 import ch.demianh.xl2monitor.serial.SerialConnection;
 import ch.demianh.xl2monitor.serial.SerialScreenReader;
+import ch.demianh.xl2monitor.serial.patterns.LAEQ60_Wide_Pattern;
 
 public class StandaloneTest {
 
@@ -12,7 +13,7 @@ public class StandaloneTest {
         connection.queryString("*IDN?");
 
         byte[] data = connection.queryBytes("RXL2S");
-        SerialScreenReader reader = new SerialScreenReader(data);
+        SerialScreenReader reader = new SerialScreenReader(data, new LAEQ60_Wide_Pattern());
 
         reader.printScreenToLog();
 
