@@ -8,7 +8,7 @@ The device needs to be connected to the computer through an usb cable.
 
 ## Download
 
-[Download ZIP](https://raw.githubusercontent.com/demianh/xl2-monitor/master/xl2monitor.zip)
+[Download ZIP](https://raw.githubusercontent.com/demianh/xl2-monitor/master/xl2monitor.zip) or [Alternative Wide Build](https://raw.githubusercontent.com/demianh/xl2-monitor/master/xl2monitor-wide.zip)
 
 Currently only OSX builds are available, though Windows should be possible. Requires X11 XQuartz to run.
 
