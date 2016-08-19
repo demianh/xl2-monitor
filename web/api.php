@@ -29,6 +29,27 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 });
 
 /**
+ * Returns a list of all stations with the latest measurement in the last hour
+ */
+$app->get('/export/{station}', function ($request, $response, $args) use(&$DB) {
+
+	$station = $request->getAttribute('station');
+	$measures = $DB->fetchAll('
+		SELECT timestamp, value FROM measures 
+		WHERE station = ?
+		GROUP BY timestamp
+		ORDER BY timestamp ASC
+	', [$station]);
+
+	$csv = [];
+	foreach ($measures as $measure) {
+		$csv[] = date("Y-m-d H:i:s", $measure['timestamp']) . ";" . $measure['value'];
+	}
+
+	return $response->getBody()->write(implode("\n", $csv));
+});
+
+/**
  * Collects a measurement
  * Format: {"station":"Stationname", "value":84.0}
  */
