@@ -8,7 +8,7 @@ new Vue({
             this.$http.get('api.php/stations').then(function (response, status, request) {
                 this.stations = JSON.parse(response.body);
             }).finally(function () {
-                setTimeout(this.updateData, 1000);
+                setTimeout(this.updateData, 2000);
             });
         }
     },
