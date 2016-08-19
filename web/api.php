@@ -21,6 +21,7 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 			GROUP BY station
 		) r ON t.station = r.station AND t.timestamp = r.maxts
 		WHERE t.timestamp > UNIX_TIMESTAMP() - 60 * 60 * 12
+		GROUP BY t.timestamp, t.station
 		ORDER BY t.station ASC
 	');
 
