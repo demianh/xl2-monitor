@@ -10,7 +10,7 @@ $DB = DriverManager::getConnection($SQL_CREDENTIALS, new \Doctrine\DBAL\Configur
 $app = new Slim\App();
 
 /**
- * Returns a list of all stations with the latest measurement in the last 12 hours
+ * Returns a list of all stations with the latest measurement in the last hour
  */
 $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 
@@ -20,7 +20,7 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 			FROM measures
 			GROUP BY station
 		) r ON t.station = r.station AND t.timestamp = r.maxts
-		WHERE t.timestamp > UNIX_TIMESTAMP() - 60 * 60 * 12
+		WHERE t.timestamp > UNIX_TIMESTAMP() - 60 * 60 * 1
 		GROUP BY t.timestamp, t.station
 		ORDER BY t.station ASC
 	');
