@@ -29,7 +29,7 @@ $app->get('/stations', function ($request, $response, $args) use(&$DB) {
 });
 
 /**
- * Returns a list of all stations with the latest measurement in the last hour
+ * Returns a list of all measurements for a station
  */
 $app->get('/export/{station}', function ($request, $response, $args) use(&$DB) {
 
@@ -43,10 +43,10 @@ $app->get('/export/{station}', function ($request, $response, $args) use(&$DB) {
 
 	$csv = [];
 	foreach ($measures as $measure) {
-		$csv[] = date("Y-m-d H:i:s", $measure['timestamp']) . ";" . $measure['value'];
+		$csv[] = date("Y-m-d H:i:s", $measure['timestamp']) . "," . $measure['value'];
 	}
 
-	return $response->getBody()->write(implode("\n", $csv));
+	return $response->getBody()->write(implode("<br>\n", $csv));
 });
 
 /**
