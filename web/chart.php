@@ -21,7 +21,7 @@ $measures = $DB->fetchAll('
 
 $data = [];
 foreach ($measures as $measure) {
-	$data[] =  '{ x: '.$measure['timestamp'].', y:'.$measure['value'].'}';
+	$data[] =  '{ x: '.($measure['timestamp']*1000).', y:'.$measure['value'].'}';
 }
 
 ?>
