@@ -1,6 +1,8 @@
 package ch.demianh.xl2monitor.websync;
 
 
+import ch.demianh.xl2monitor.App;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -23,7 +25,7 @@ public class WebsyncPostThread implements Runnable {
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setDoOutput(true);
             con.setDoInput(true);
-            con.setRequestProperty("User-Agent", "XL2MonitorApp/1.0");
+            con.setRequestProperty("User-Agent", "XL2MonitorApp/" + App.APP_VERSION);
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("Accept", "application/json");
             con.setRequestMethod("POST");

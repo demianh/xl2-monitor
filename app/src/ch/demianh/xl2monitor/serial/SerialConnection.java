@@ -32,16 +32,23 @@ public class SerialConnection implements ISerialConnection {
     public void disconnect(){
         try {
             System.out.println("Disconnecting...");
-            inputStream.close();
-            inputStream = null;
-            outputStream.close();
-            outputStream = null;
-            serialPort.closePort();
-            serialPort = null;
-        } catch (IOException e) {
+            if(inputStream != null){
+                System.out.println("Close inputStream...");
+                inputStream.close();
+                inputStream = null;
+            }
+            if(outputStream != null){
+                System.out.println("Close outputStream...");
+                outputStream.close();
+                outputStream = null;
+            }
+            if(serialPort != null){
+                System.out.println("Close serialPort...");
+                serialPort.closePort();
+                serialPort = null;
+            }
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            // we don't care
         }
     }
 
@@ -86,7 +93,7 @@ public class SerialConnection implements ISerialConnection {
 
         } catch (Exception e) {
             System.out.println("Port Error: " + e.getMessage());
-            return null;
+            throw new SerialConnectionException(e.getMessage());
         }
     }
 
@@ -101,6 +108,7 @@ public class SerialConnection implements ISerialConnection {
 
     private void searchAndConnectToPort(){
         // check all available ports
+        System.out.println("Search for ports and connect...");
         SerialPort[] ports = SerialPort.getCommPorts();
         for(SerialPort comPort : ports){
             System.out.println("Port found: " + comPort.getSystemPortName() + " -> " +  comPort.getDescriptivePortName());

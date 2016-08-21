@@ -11,6 +11,8 @@ import java.util.prefs.Preferences;
 
 public class App extends Frame implements ActionListener, WindowListener {
 
+    public static double APP_VERSION = 1.1;
+
     private boolean TESTING_MODE = false;
     private String SYNC_URL = "http://mfw.usystems.ch/api.php";
 
@@ -32,6 +34,7 @@ public class App extends Frame implements ActionListener, WindowListener {
     private MonitorThread runnable = null;
 
     public static void main(String[] args){
+        System.out.println("Starting XL2 Monitor v" + APP_VERSION);
         App app = new App(args);
         app.setSize(300,300);
         app.setVisible(true);
@@ -59,7 +62,7 @@ public class App extends Frame implements ActionListener, WindowListener {
             paramNo++;
         }
 
-        this.setTitle("XL2 Monitor");
+        this.setTitle("XL2 Monitor " + APP_VERSION);
         this.setLayout(null);
 
         // ----- Fonts & Colors -----
@@ -179,7 +182,10 @@ public class App extends Frame implements ActionListener, WindowListener {
             thread.interrupt();
             thread = null;
         }
-        runnable = null;
+        if(runnable != null) {
+            runnable.stopMonitoring();
+            runnable = null;
+        }
     }
 
     private void saveName(){

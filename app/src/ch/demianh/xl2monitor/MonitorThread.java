@@ -11,6 +11,7 @@ class MonitorThread implements Runnable {
     private App app;
     private boolean TESTING_MODE = false;
     private String SYNC_URL;
+    private boolean running = false;
 
     public MonitorThread(App app, Boolean testing, String syncUrl){
         this.app = app;
@@ -21,21 +22,23 @@ class MonitorThread implements Runnable {
     public void run() {
         System.out.println("Thread started..." + app.getName());
 
+        this.running = true;
+
         Websync websync = new Websync(this.SYNC_URL);
 
         SerialConnection connection = new SerialConnection();
 
+        // Different Patterns for different Device Software Versions / Builds
+        //IScreenPattern pattern = new LAEQ60_Narrow_Pattern();
+        IScreenPattern pattern = new LAEQ60_Wide_Pattern();
+
         if(!connection.isConnected() && !TESTING_MODE){
             app.setErrorMessage("No NTi XL2 Device found");
-            connection.disconnect();
-            app.setStateStopped();
-            return;
         }
 
         try {
 
-            while(!Thread.currentThread().isInterrupted() && (connection.isConnected() || TESTING_MODE)){
-
+            while(!Thread.currentThread().isInterrupted() && this.running) {
                 try {
                     Double decibel;
                     if(TESTING_MODE){
@@ -45,7 +48,7 @@ class MonitorThread implements Runnable {
                     } else {
                         // Read from serial port
                         byte[] data = connection.queryBytes("RXL2S");
-                        SerialScreenReader serialScreenReader = new SerialScreenReader(data, new LAEQ60_Wide_Pattern());
+                        SerialScreenReader serialScreenReader = new SerialScreenReader(data, pattern);
                         decibel = serialScreenReader.parseLAeq60Value();
                     }
 
@@ -58,7 +61,18 @@ class MonitorThread implements Runnable {
 
                 } catch (SerialConnectionException e){
                     app.setErrorMessage(e.getMessage());
-                    break;
+                    e.printStackTrace();
+
+                    // retry if port has errors or is not connected
+                    if(connection.isConnected()){
+                        connection.disconnect();
+                    }
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    connection.connect();
                 }
 
                 // Pause for 0.9 second, serial connection sleeps another 100ms
@@ -71,6 +85,10 @@ class MonitorThread implements Runnable {
         }
         connection.disconnect();
         app.setStateStopped();
+    }
+
+    public void stopMonitoring() {
+        this.running = false;
     }
 
 }
