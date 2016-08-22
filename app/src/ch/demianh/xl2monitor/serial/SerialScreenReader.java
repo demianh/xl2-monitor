@@ -27,14 +27,14 @@ public class SerialScreenReader {
         this.P = pattern;
     }
 
-    public double parseLAeq60Value(){
+    public double parseLAeq60Value() throws SerialConnectionException {
 
 
         String LAeq60value = "";
 
         List<String> lines = this.getScreenLines();
         if(lines == null){
-            return 0.0;
+            throw new SerialConnectionException("No data from device");
         }
         if(lines.size() > P.LINE_NUMBER_2()){
             String line1 = lines.get(P.LINE_NUMBER_1());
@@ -54,9 +54,13 @@ public class SerialScreenReader {
             String number4 = line1.substring(P.OFFSET_DIGIT_4(), P.OFFSET_DIGIT_4()+P.DIGIT_WIDTH()) + line2.substring(P.OFFSET_DIGIT_4(), P.OFFSET_DIGIT_4()+P.DIGIT_WIDTH());
             LAeq60value += guessNumber(number4);
 
-            return Double.parseDouble(LAeq60value);
+            double val = Double.parseDouble(LAeq60value);
+            if(val == 0.0){
+                throw new SerialConnectionException("Parsed value is '0.0'. Wrong pattern?");
+            }
+            return val;
         } else {
-            return 0.0;
+            throw new SerialConnectionException("Invalid data from device");
         }
 
     }
